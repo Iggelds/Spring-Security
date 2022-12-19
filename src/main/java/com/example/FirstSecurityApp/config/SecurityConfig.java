@@ -33,8 +33,10 @@ private final PersonDetailsService personDetailsService;
 
     @Bean
     protected SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests().requestMatchers("/auth/login", "auth/registration", "/error").permitAll()
-                .anyRequest().authenticated()
+        return http.authorizeHttpRequests()
+                .requestMatchers("/admin").hasRole("ADMIN")
+                .requestMatchers("/auth/login", "auth/registration", "/error").permitAll()
+                .anyRequest().hasAnyRole("USER", "ADMIN")
                 .and()
                 .formLogin().loginPage("/auth/login")
                 .loginProcessingUrl("/process_login")
